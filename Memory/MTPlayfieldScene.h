@@ -10,6 +10,6 @@
 
 @interface MTPlayfieldScene : CCScene
 
-+(id)sceneWithRows:(int)rows andColumns:(int)columns;
++(id)sceneWithRows:(NSInteger)rows andColumns:(NSInteger)columns;
 
 @end

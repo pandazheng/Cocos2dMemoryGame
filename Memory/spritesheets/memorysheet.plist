@@ -166,13 +166,13 @@
             <key>format</key>
             <integer>2</integer>
             <key>realTextureFileName</key>
-            <string>memory.png</string>
+            <string>memorysheet.png</string>
             <key>size</key>
             <string>{512,1024}</string>
             <key>smartupdate</key>
             <string>$TexturePacker:SmartUpdate:6a18e5dc6b9377cf593a5c841f64a60d$</string>
             <key>textureFileName</key>
-            <string>memory.png</string>
+            <string>memorysheet.png</string>
         </dict>
     </dict>
 </plist>

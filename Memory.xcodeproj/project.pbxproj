@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3721D1A1E262E5940303C634 /* memorysheet.tps in Resources */ = {isa = PBXBuildFile; fileRef = 3721DC2EDD5EDB987A20511E /* memorysheet.tps */; };
+		3721D6682AF9F8BCC422FA42 /* memorysheet.png in Resources */ = {isa = PBXBuildFile; fileRef = 3721D17C51C1075C46406E04 /* memorysheet.png */; };
+		3721D6B095BAA819AAF94BCD /* memorysheet-hd.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3721DA9F80577C8898D643FB /* memorysheet-hd.plist */; };
+		3721D8322D94DC6C6D97859C /* MTMemoryTile.m in Sources */ = {isa = PBXBuildFile; fileRef = 3721DE30BCC67A407ACC85B7 /* MTMemoryTile.m */; };
+		3721D8453B76E1EF73622E59 /* memorysheet-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 3721D3F672A37D27CF21C715 /* memorysheet-hd.png */; };
+		3721DEF980CE51687C14A9E4 /* memorysheet.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3721D540FB04F1F54613AE97 /* memorysheet.plist */; };
 		D73A91FC16F97125003BE61D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D73A91FB16F97125003BE61D /* QuartzCore.framework */; };
 		D73A91FE16F97125003BE61D /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D73A91FD16F97125003BE61D /* OpenGLES.framework */; };
 		D73A920016F97125003BE61D /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D73A91FF16F97125003BE61D /* OpenAL.framework */; };
@@ -139,6 +145,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3721D17C51C1075C46406E04 /* memorysheet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = memorysheet.png; sourceTree = "<group>"; };
+		3721D3F672A37D27CF21C715 /* memorysheet-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "memorysheet-hd.png"; sourceTree = "<group>"; };
+		3721D540FB04F1F54613AE97 /* memorysheet.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = memorysheet.plist; sourceTree = "<group>"; };
+		3721DA9F80577C8898D643FB /* memorysheet-hd.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = "memorysheet-hd.plist"; sourceTree = "<group>"; };
+		3721DC2EDD5EDB987A20511E /* memorysheet.tps */ = {isa = PBXFileReference; lastKnownFileType = file.tps; path = memorysheet.tps; sourceTree = "<group>"; };
+		3721DCED847B425896B1A52E /* MTMemoryTile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMemoryTile.h; sourceTree = "<group>"; };
+		3721DE30BCC67A407ACC85B7 /* MTMemoryTile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMemoryTile.m; sourceTree = "<group>"; };
 		D73A91F816F97125003BE61D /* Memory.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Memory.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D73A91FB16F97125003BE61D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		D73A91FD16F97125003BE61D /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -429,6 +442,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3721D9B3DDF3D4F98CA8748A /* helper classes */ = {
+			isa = PBXGroup;
+			children = (
+				3721DE30BCC67A407ACC85B7 /* MTMemoryTile.m */,
+				3721DCED847B425896B1A52E /* MTMemoryTile.h */,
+			);
+			name = "helper classes";
+			sourceTree = "<group>";
+		};
+		3721DC5F8F9F96869A69323A /* spritesheets */ = {
+			isa = PBXGroup;
+			children = (
+				3721D17C51C1075C46406E04 /* memorysheet.png */,
+				3721DC2EDD5EDB987A20511E /* memorysheet.tps */,
+				3721D540FB04F1F54613AE97 /* memorysheet.plist */,
+				3721D3F672A37D27CF21C715 /* memorysheet-hd.png */,
+				3721DA9F80577C8898D643FB /* memorysheet-hd.plist */,
+			);
+			path = spritesheets;
+			sourceTree = "<group>";
+		};
 		D73A91EF16F97125003BE61D = {
 			isa = PBXGroup;
 			children = (
@@ -474,6 +508,8 @@
 				D73A920E16F97125003BE61D /* Resources */,
 				D73A922816F97125003BE61D /* libs */,
 				D73A938116F97127003BE61D /* Supporting Files */,
+				3721DC5F8F9F96869A69323A /* spritesheets */,
+				3721D9B3DDF3D4F98CA8748A /* helper classes */,
 			);
 			path = Memory;
 			sourceTree = "<group>";
@@ -926,6 +962,11 @@
 				D73A922416F97125003BE61D /* Icon@2x.png in Resources */,
 				D73A922716F97125003BE61D /* iTunesArtwork in Resources */,
 				D73A936516F97126003BE61D /* ChangeLog in Resources */,
+				3721D6682AF9F8BCC422FA42 /* memorysheet.png in Resources */,
+				3721D1A1E262E5940303C634 /* memorysheet.tps in Resources */,
+				3721DEF980CE51687C14A9E4 /* memorysheet.plist in Resources */,
+				3721D8453B76E1EF73622E59 /* memorysheet-hd.png in Resources */,
+				3721D6B095BAA819AAF94BCD /* memorysheet-hd.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1043,6 +1084,7 @@
 				D73A939816F9733F003BE61D /* MTPlayfieldScene.m in Sources */,
 				D73A939B16F973C2003BE61D /* MTMenuScene.m in Sources */,
 				D73A939E16F975E2003BE61D /* MTPlayfieldLayer.m in Sources */,
+				3721D8322D94DC6C6D97859C /* MTMemoryTile.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
