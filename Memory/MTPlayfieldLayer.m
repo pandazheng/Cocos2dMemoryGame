@@ -1,12 +1,5 @@
-//
-//  MTPlayfieldLayer.m
-//  Memory
-//
-//  Created by Jake Scott on 20/03/13.
-//
-//
-
 #import "MTPlayfieldLayer.h"
+#import "MTMemoryTile.h"
 
 @implementation MTPlayfieldLayer
 
@@ -149,7 +142,16 @@
 
 - (void)acquireMemoryTiles
 {
-
+    // the tilesAvailable array will be the only retain we have on the tiles.
+    for (int count = 1; count <= maxTiles; count++) {
+        for (NSInteger tileNo = 1; tileNo <= 2; tileNo++) {
+            NSString *imageName = [NSString stringWithFormat:@"tile%i.png", count];
+            MTMemoryTile *newTile = [MTMemoryTile spriteWithSpriteFrameName:imageName];
+            [newTile setFaceSprintName:imageName];
+            [newTile showBack];
+            [tilesAvailable addObject:newTile];
+        }
+    }
 }
 
 - (void)preloadEffects
