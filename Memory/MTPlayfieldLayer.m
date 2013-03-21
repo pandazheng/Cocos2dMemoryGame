@@ -1,3 +1,4 @@
+#import <CoreGraphics/CoreGraphics.h>
 #import "MTPlayfieldLayer.h"
 #import "MTMemoryTile.h"
 
@@ -157,6 +158,14 @@
 - (void)preloadEffects
 {
 
+}
+
+-(CGPoint) tilePosforRow:(NSInteger)rowNum andColumn:(NSInteger)colNum
+{
+    // We subtract by half because we need the center point of the tile which is our anchor point (the point the tile will pivot or rotate)
+    float newX = boardOffsetX + (tileSize.width + padWidth) * (colNum - .5);
+    float newY = boardOffsetY + (tileSize.height + padHeight) * (rowNum - .5);
+    return ccp(newX, newY);
 }
 
 - (void)dealloc
