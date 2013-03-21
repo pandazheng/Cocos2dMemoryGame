@@ -1,5 +1,6 @@
 #import "MTPlayfieldLayer.h"
 #import "MTMemoryTile.h"
+#import "MTMenuScene.h"
 
 #define SND_TILE_FLIP @"button.caf"
 #define SND_TILE_SCORE @"whoosh.caf"
@@ -122,7 +123,7 @@
     [self addChild:livesTitle];
 
     // Build the display for the lives counter
-    livesRemainingDisplay = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"%i", livesRemaining] fontName:@"Market Feld" fontSize:30];
+    livesRemainingDisplay = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"%i", livesRemaining] fontName:@"Marker Felt" fontSize:30];
     [livesRemainingDisplay setPosition:[self livesPosition]];
     [self resetLivesColor];
     [self addChild:livesRemainingDisplay];
@@ -218,5 +219,76 @@
     return ccp(newX, newY);
 }
 
+- (void)ccTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    // If game over, go back to the main menu on any touch
+    if (isGameOver) {
+        [[CCDirector sharedDirector] replaceScene:[MTMenuScene node]];
+        return;
+    }
+
+    UITouch *touch = [touches anyObject];
+
+    // 0,0 for Cocoa Touch is the upper left corner, whereas the 0,0 position for OpenGL is the lower left corner
+    CGPoint location = [touch locationInView:[touch view]];
+    CGPoint glLocation = [[CCDirector sharedDirector] convertToGL:location]; // OpenGL location
+
+    // If the back button was pressed, we exit
+    if (CGRectContainsPoint([backButton boundingBox], glLocation)) {
+        [[CCDirector sharedDirector] replaceScene:[MTMenuScene node]];
+        return;
+    }
+
+    // If we have 2 tiles face up, do not respond
+    if ([tilesSelected count] == 2) {
+        return;
+    }
+
+    // Iterate through tilesInPlay to see which tile was touched
+    for (MTMemoryTile *aTile in tilesInPlay) {
+
+        if ([aTile containsTouchLocation:glLocation] && [aTile isFaceUp] == NO) {
+
+            // Flip the tile
+            [aTile flipTile];
+
+            // Hold the tile in a buffer array
+            [tilesSelected addObject:aTile];
+
+            // Call the score/fail check
+            if ([tilesSelected count] == 2) {
+                // we delay so player can see tiles
+                [self scheduleOnce:@selector(checkForMatch) delay:1.0];
+                break;
+            }
+        }
+    }
+}
+
+- (void)checkForMatch
+{
+    // get the memory tiles for comparison
+    MTMemoryTile *tileA = tilesSelected[0];
+    MTMemoryTile *tileB = tilesSelected[1];
+
+    // see if the two tiles matched
+    if ([tileA.faceSprintName isEqualToString:tileB.faceSprintName]) {
+        // remove the matching tiles
+        [self removeMemoryTile:tileA];
+        [self removeMemoryTile:tileB];
+    } else {
+        // No match, flip the tiles back
+        [tileA flipTile];
+        [tileB flipTile];
+    }
+
+    // remove the tiles from tilesSelected
+    [tilesSelected removeAllObjects];
+}
+
+- (void)removeMemoryTile:(MTMemoryTile *)tile
+{
+    [tile removeFromParentAndCleanup:YES];
+}
 
 @end

@@ -41,9 +41,6 @@
 	// ask director for the window size
 	CGSize size = [[CCDirector sharedDirector] winSize];
 
-    NSLog(@"**********^^^^^^^^^^^^^^^^^^^ Director size width:%f height:%f", size.width , size.height);
-
-
 	CCSprite *background;
 	
 	if( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone ) {
