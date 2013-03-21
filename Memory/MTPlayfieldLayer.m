@@ -1,4 +1,3 @@
-#import <CoreGraphics/CoreGraphics.h>
 #import "MTPlayfieldLayer.h"
 #import "MTMemoryTile.h"
 
@@ -138,7 +137,39 @@
 
 - (void)generateTileGrid
 {
+    // this method takes the tilesAvailable array, and deals the giles out to the board randomly
+    // Tiles used will be moved to the tilesInPlay array
+    for (NSInteger newRow = 1; newRow <= boardRows; newRow++) {
+        for (NSInteger newCol = 1; newCol <= boardColumns; newCol++) {
+            // randomize each card slot
+            NSInteger rndPick = (NSInteger) arc4random() % ([tilesAvailable count]);
 
+            // Grab the MemoryTile from the array
+            MTMemoryTile *newTile = [tilesAvailable objectAtIndex:rndPick];
+
+            // Let the card 'know' where it is
+            [newTile setTileRow:newRow];
+            [newTile setTileColumn:newCol];
+
+            // Scale the tile to size
+            float tileScaleX = tileSize.width / newTile.contentSize.width;
+
+            // We scale by X only because tiles are square
+            [newTile setScale:tileScaleX];
+
+            // Set the position for the tile
+            [newTile setPosition:[self tilePosforRow:newRow andColumn:newCol]];
+
+            // Add the tile as a child of our batch node
+            [self addChild:newTile];
+
+            // Since we don't want to reuse this tile, we remove it from the array.
+            [tilesAvailable removeObjectAtIndex:rndPick];
+
+            // We retain the Memory tile for later access
+            [tilesInPlay addObject:newTile];
+        }
+    }
 }
 
 - (void)acquireMemoryTiles
@@ -150,6 +181,7 @@
             MTMemoryTile *newTile = [MTMemoryTile spriteWithSpriteFrameName:imageName];
             [newTile setFaceSprintName:imageName];
             [newTile showBack];
+
             [tilesAvailable addObject:newTile];
         }
     }
@@ -160,7 +192,7 @@
 
 }
 
--(CGPoint) tilePosforRow:(NSInteger)rowNum andColumn:(NSInteger)colNum
+- (CGPoint)tilePosforRow:(NSInteger)rowNum andColumn:(NSInteger)colNum
 {
     // We subtract by half because we need the center point of the tile which is our anchor point (the point the tile will pivot or rotate)
     float newX = boardOffsetX + (tileSize.width + padWidth) * (colNum - .5);
