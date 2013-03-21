@@ -39,6 +39,4 @@
 
 +(id) layerWithRows:(NSInteger)numRows andColumns:(NSInteger)numCols;
 
-- (id)initWithRows:(NSInteger)i andColumns:(NSInteger)columns;
-
 @end

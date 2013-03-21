@@ -49,12 +49,12 @@
 
 -(void) startGameMedium
 {
-    [[CCDirector sharedDirector] replaceScene:[MTPlayfieldScene sceneWithRows:2 andColumns:2]];
+    [[CCDirector sharedDirector] replaceScene:[MTPlayfieldScene sceneWithRows:3 andColumns:4]];
 }
 
 -(void) startGameHard
 {
-    [[CCDirector sharedDirector] replaceScene:[MTPlayfieldScene sceneWithRows:2 andColumns:2]];
+    [[CCDirector sharedDirector] replaceScene:[MTPlayfieldScene sceneWithRows:4 andColumns:5]];
 }
 
 @end

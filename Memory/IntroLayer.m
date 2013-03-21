@@ -8,6 +8,7 @@
 
 
 // Import the interfaces
+#import <CoreGraphics/CoreGraphics.h>
 #import "IntroLayer.h"
 #import "MTMenuScene.h"
 
@@ -39,6 +40,9 @@
 
 	// ask director for the window size
 	CGSize size = [[CCDirector sharedDirector] winSize];
+
+    NSLog(@"**********^^^^^^^^^^^^^^^^^^^ Director size width:%f height:%f", size.width , size.height);
+
 
 	CCSprite *background;
 	

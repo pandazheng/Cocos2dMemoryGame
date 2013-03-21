@@ -1,6 +1,11 @@
 #import "MTPlayfieldLayer.h"
 #import "MTMemoryTile.h"
 
+#define SND_TILE_FLIP @"button.caf"
+#define SND_TILE_SCORE @"whoosh.caf"
+#define SND_TILE_WRONG @"buzzer.caf"
+#define SND_SCORE @"harprun.caf"
+
 @implementation MTPlayfieldLayer
 
 + (id)layerWithRows:(NSInteger)numRows andColumns:(NSInteger)numCols
@@ -33,8 +38,8 @@
         [memorySheet addChild:backButton];
 
         // Maximum size of the actual playing field
-        boardHeight = 400;
-        boardWidth = 320;
+        boardWidth = 400;
+        boardHeight = 320;
 
         // Set the board rows and columns
         boardRows = numRows;
@@ -52,7 +57,8 @@
 
         // Set the desired tile size
         float tileWidth = ((boardWidth - (boardColumns * padWidth)) / boardColumns) - padWidth;
-        float tileHeight = (boardHeight - (boardRows * padHeight) / boardRows) - padHeight;
+
+        float tileHeight = ((boardHeight - (boardRows * padHeight)) / boardRows) - padHeight;
 
         // Force the tiles to be square
         if (tileWidth > tileHeight) {
@@ -64,6 +70,7 @@
         // Store the tileSize so we can use it later
         tileSize = CGSizeMake(tileWidth, tileHeight);
 
+        // Set the offset from the edge
         boardOffsetX = (boardWidth - ((tileSize.width + padWidth) * boardColumns)) / 2;
         boardOffsetY = (boardHeight - ((tileSize.height + padHeight) * boardRows)) / 2;
 
@@ -86,6 +93,14 @@
     }
 
     return self;
+}
+
+- (void)dealloc
+{
+    [tilesAvailable release];
+    [tilesSelected release];
+    [tilesInPlay release];
+    [super dealloc];
 }
 
 - (void)generateScoreAndLivesDisplay
@@ -189,24 +204,18 @@
 
 - (void)preloadEffects
 {
-
+    // Preload all of our sound effects
+    [[SimpleAudioEngine sharedEngine] preloadEffect:SND_TILE_FLIP];
+    [[SimpleAudioEngine sharedEngine] preloadEffect:SND_TILE_SCORE];
+    [[SimpleAudioEngine sharedEngine] preloadEffect:SND_TILE_WRONG];
+    [[SimpleAudioEngine sharedEngine] preloadEffect:SND_SCORE];
 }
 
 - (CGPoint)tilePosforRow:(NSInteger)rowNum andColumn:(NSInteger)colNum
 {
-    // We subtract by half because we need the center point of the tile which is our anchor point (the point the tile will pivot or rotate)
     float newX = boardOffsetX + (tileSize.width + padWidth) * (colNum - .5);
     float newY = boardOffsetY + (tileSize.height + padHeight) * (rowNum - .5);
     return ccp(newX, newY);
-}
-
-- (void)dealloc
-{
-    [tilesAvailable release];
-    [tilesSelected release];
-    [tilesInPlay release];
-
-    [super dealloc];
 }
 
 
