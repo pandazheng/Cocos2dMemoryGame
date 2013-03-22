@@ -87,9 +87,16 @@
         // we be used for the match detection methods
         tilesSelected = [[NSMutableArray alloc] initWithCapacity:2];
 
+        // Populate the tilesAvailable array
         [self acquireMemoryTiles];
+
+        // Generate the actual playfield on-screen
         [self generateTileGrid];
+
+        // Calculate the number of lives left
         [self calculateLivesRemaining];
+
+        // We create the score and lives display here
         [self generateScoreAndLivesDisplay];
     }
 
@@ -104,51 +111,28 @@
     [super dealloc];
 }
 
-- (void)generateScoreAndLivesDisplay
+- (void)preloadEffects
 {
-    // Build the word "SCORE"
-    CCLabelTTF *scoreTitle = [CCLabelTTF labelWithString:@"SCORE" fontName:@"Marker Felt" fontSize:30];
-    [scoreTitle setPosition:ccpAdd([self scorePosition], ccp(0, 30))];
-    [self addChild:scoreTitle];
-
-    // Build the display for the score counter
-    playerScoreDisplay = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"%i", playerScore] fontName:@"Marker Felt" fontSize:40];
-    [playerScoreDisplay setPosition:[self scorePosition]];
-    [self addChild:playerScoreDisplay];
-
-    // Build the word "LIVES"
-    CCLabelTTF *livesTitle = [CCLabelTTF labelWithString:@"LIVES" fontName:@"Marker Felt" fontSize:30];
-    [livesTitle setPosition:ccpAdd([self livesPosition], ccp(0, 30))];
-    [livesTitle setColor:ccBLUE];
-    [self addChild:livesTitle];
-
-    // Build the display for the lives counter
-    livesRemainingDisplay = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"%i", livesRemaining] fontName:@"Marker Felt" fontSize:30];
-    [livesRemainingDisplay setPosition:[self livesPosition]];
-    [self resetLivesColor];
-    [self addChild:livesRemainingDisplay];
+    // Preload all of our sound effects
+    [[SimpleAudioEngine sharedEngine] preloadEffect:SND_TILE_FLIP];
+    [[SimpleAudioEngine sharedEngine] preloadEffect:SND_TILE_SCORE];
+    [[SimpleAudioEngine sharedEngine] preloadEffect:SND_TILE_WRONG];
+    [[SimpleAudioEngine sharedEngine] preloadEffect:SND_SCORE];
 }
 
-- (void)resetLivesColor
+- (void)acquireMemoryTiles
 {
-    // Change the Lives counter back to blue
-    [livesRemainingDisplay setColor:ccBLUE];
-}
+    // the tilesAvailable array will be the only retain we have on the tiles.
+    for (int count = 1; count <= maxTiles; count++) {
+        for (NSInteger tileNo = 1; tileNo <= 2; tileNo++) {
+            NSString *imageName = [NSString stringWithFormat:@"tile%i.png", count];
+            MTMemoryTile *newTile = [MTMemoryTile spriteWithSpriteFrameName:imageName];
+            [newTile setFaceSprintName:imageName];
+            [newTile showBack];
 
-- (CGPoint)scorePosition
-{
-    return ccp(size.width - 10 - tileSize.width / 2, (size.height / 4) * 3);
-}
-
-- (CGPoint)livesPosition
-{
-    return ccp(size.width - 10 - tileSize.width / 2, (size.height / 4));
-}
-
-
-- (void)calculateLivesRemaining
-{
-
+            [tilesAvailable addObject:newTile];
+        }
+    }
 }
 
 - (void)generateTileGrid
@@ -188,28 +172,54 @@
     }
 }
 
-- (void)acquireMemoryTiles
+- (void)calculateLivesRemaining
 {
-    // the tilesAvailable array will be the only retain we have on the tiles.
-    for (int count = 1; count <= maxTiles; count++) {
-        for (NSInteger tileNo = 1; tileNo <= 2; tileNo++) {
-            NSString *imageName = [NSString stringWithFormat:@"tile%i.png", count];
-            MTMemoryTile *newTile = [MTMemoryTile spriteWithSpriteFrameName:imageName];
-            [newTile setFaceSprintName:imageName];
-            [newTile showBack];
-
-            [tilesAvailable addObject:newTile];
-        }
-    }
+    // lives equal half of the tiles on the board
+    livesRemaining = [tilesInPlay count] / 2;
 }
 
-- (void)preloadEffects
+
+- (void)generateScoreAndLivesDisplay
 {
-    // Preload all of our sound effects
-    [[SimpleAudioEngine sharedEngine] preloadEffect:SND_TILE_FLIP];
-    [[SimpleAudioEngine sharedEngine] preloadEffect:SND_TILE_SCORE];
-    [[SimpleAudioEngine sharedEngine] preloadEffect:SND_TILE_WRONG];
-    [[SimpleAudioEngine sharedEngine] preloadEffect:SND_SCORE];
+    // Build the word "SCORE"
+    CCLabelTTF *scoreTitle = [CCLabelTTF labelWithString:@"SCORE" fontName:@"Marker Felt" fontSize:30];
+    [scoreTitle setPosition:ccpAdd([self scorePosition], ccp(0, 30))];
+    [self addChild:scoreTitle];
+
+    // Build the display for the score counter
+    playerScoreDisplay = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"%i", playerScore] fontName:@"Marker Felt" fontSize:40];
+    [playerScoreDisplay setPosition:[self scorePosition]];
+    [self addChild:playerScoreDisplay];
+
+    // Build the word "LIVES"
+    CCLabelTTF *livesTitle = [CCLabelTTF labelWithString:@"LIVES" fontName:@"Marker Felt" fontSize:30];
+    [livesTitle setPosition:ccpAdd([self livesPosition], ccp(0, 30))];
+    [livesTitle setColor:ccBLUE];
+    [self addChild:livesTitle];
+
+    // Build the display for the lives counter
+    livesRemainingDisplay = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"%i", livesRemaining] fontName:@"Marker Felt" fontSize:30];
+    [livesRemainingDisplay setPosition:[self livesPosition]];
+    [self resetLivesColor];
+    [self addChild:livesRemainingDisplay];
+}
+
+- (void)resetLivesColor
+{
+    // Change the Lives counter back to blue
+    [livesRemainingDisplay setColor:ccBLUE];
+}
+
+- (CGPoint)scorePosition
+{
+    // place the score three quarters of the way up the screen
+    return ccp(size.width - 10 - tileSize.width / 2, (size.height / 4) * 3);
+}
+
+- (CGPoint)livesPosition
+{
+    // place the lives one quarter of the way up the screen
+    return ccp(size.width - 10 - tileSize.width / 2, (size.height / 4) * 1); // 1/4 up the screen
 }
 
 - (CGPoint)tilePosforRow:(NSInteger)rowNum andColumn:(NSInteger)colNum
@@ -273,17 +283,157 @@
 
     // see if the two tiles matched
     if ([tileA.faceSprintName isEqualToString:tileB.faceSprintName]) {
-        // remove the matching tiles
-        [self removeMemoryTile:tileA];
-        [self removeMemoryTile:tileB];
+
+        // We start the scoring, lives, and animations
+        [self scoreThisMemoryTile:tileA];
+        [self scoreThisMemoryTile:tileB];
+
+        [self animateScoreDisplay];
+
+        [self calculateLivesRemaining];
+
+        [self updateLivesDisplayQuiet];
+        [self checkForGameOver];
+
     } else {
         // No match, flip the tiles back
         [tileA flipTile];
         [tileB flipTile];
+
+        // Take off a life and update the display
+        livesRemaining--;
+        [self animateLivesDisplay];
     }
 
     // remove the tiles from tilesSelected
     [tilesSelected removeAllObjects];
+}
+
+- (void)scoreThisMemoryTile:(MTMemoryTile *)aTile
+{
+    CGPoint moveDifference = ccpSub([self scorePosition], aTile.position);
+
+    // When a tile is matched, we fly the tile to the score. We want the tiles to move at a constant rate.
+    // If we hardcoded a duration for the CCMoveTo action, the tiles closer to the score would move more slowly,
+    // and those father away would move really fast. To achieve a constant rate, we set a desired velocity (speed),
+    // then calculate how far away the tile is from the score (distance). We divide these out to arrive at the correct
+    // movement duration (time).
+
+    // Speed = Distance / Time
+    // Time  = Distance / Speed
+    // Distance = Speed * Time
+
+    float distance = ccpLength(moveDifference);
+    float speed = 600.0;
+    float time = distance / speed;
+
+
+    // Define the movement actions
+    CCMoveTo *move = [CCMoveTo actionWithDuration:time position:[self scorePosition]];
+
+    CCScaleTo *scale = [CCScaleTo actionWithDuration:0.5 scale:0.001];
+
+    CCDelayTime *delay = [CCDelayTime actionWithDuration:0.5];
+
+    CCCallFuncND *remove = [CCCallFuncND actionWithTarget:self selector:@selector(removeMemoryTile:) data:aTile];
+
+    // Run the actions
+    [aTile runAction:[CCSequence actions:move, scale, delay, remove, nil]];
+
+    // Play the sound effect
+    [[SimpleAudioEngine sharedEngine] playEffect:SND_TILE_SCORE];
+
+    // Remove the tile from the tilesInPlay array
+    [tilesInPlay removeObject:aTile];
+
+    // Add 1 to the player's score
+    playerScore++;
+
+    // Recalculate the number of lives left
+    [self calculateLivesRemaining];
+}
+
+- (void)animateScoreDisplay
+{
+    // We delay for a second to allow the tiles to get to the scoring position before we animate
+    CCDelayTime *firstDelay = [CCDelayTime actionWithDuration:1.0];
+
+    CCScaleTo *scaleUp = [CCScaleTo actionWithDuration:0.2 scale:2.0];
+
+    CCCallFunc *updateScoreDisplay = [CCCallFunc actionWithTarget:self selector:@selector(updateScoreDisplay)];
+
+    CCDelayTime *secondDelay = [CCDelayTime actionWithDuration:0.2];
+
+    CCScaleTo *scaleDown = [CCScaleTo actionWithDuration:0.2 scale:1.0];
+
+    [playerScoreDisplay runAction:[CCSequence actions:firstDelay, scaleUp, updateScoreDisplay, secondDelay, scaleDown, nil]];
+}
+
+- (void)updateScoreDisplay
+{
+    // Change the score display to the new value
+    [playerScoreDisplay setString:[NSString stringWithFormat:@"%i", playerScore]];
+
+    // Play the 'score' sound
+    [[SimpleAudioEngine sharedEngine] playEffect:SND_SCORE];
+}
+
+- (void)animateLivesDisplay
+{
+    // We delay for a second to allow the tiles to flip back
+    CCScaleTo *scaleUp = [CCScaleTo actionWithDuration:0.2 scale:2.0];
+
+    CCCallFunc *updateLivesDisplay = [CCCallFunc actionWithTarget:self selector:@selector(updateLivesDisplay)];
+
+    CCCallFunc *resetLivesColor = [CCCallFunc actionWithTarget:self selector:@selector(resetLivesColor)];
+
+    CCDelayTime *delay = [CCDelayTime actionWithDuration:0.2];
+
+    CCScaleTo *scaleDown = [CCScaleTo actionWithDuration:0.2 scale:1.0];
+
+    [livesRemainingDisplay runAction:[CCSequence actions:scaleUp, updateLivesDisplay, resetLivesColor, delay, scaleDown, nil]];
+}
+
+- (void)updateLivesDisplayQuiet
+{
+    [livesRemainingDisplay setString:[NSString stringWithFormat:@"%i", livesRemaining]];
+}
+
+- (void)updateLivesDisplay
+{
+    [self updateLivesDisplayQuiet];
+
+    // Change the lives display to red
+    [livesRemainingDisplay setColor:ccRED];
+
+    // Play the 'wrong' sound
+    [[SimpleAudioEngine sharedEngine] playEffect:SND_TILE_WRONG];
+
+    [self checkForGameOver];
+}
+
+- (void)checkForGameOver
+{
+    NSString *finalText;
+
+    if ([tilesInPlay count] == 0) {
+        // Player wins
+        finalText = @"You win!";
+    } else if (livesRemaining <= 0) {
+        // Player loses
+        finalText = @"You Lose!";
+    } else {
+        // no game over conditions met
+        return;
+    }
+
+    // Set the game over flag
+    isGameOver = YES;
+
+    // Display the appropriate game over message
+    CCLabelTTF *gameOver = [CCLabelTTF labelWithString:finalText fontName:@"Marker Felt" fontSize:60];
+    [gameOver setPosition:ccp(size.width / 2, size.height / 2)];
+    [self addChild:gameOver z:50];
 }
 
 - (void)removeMemoryTile:(MTMemoryTile *)tile

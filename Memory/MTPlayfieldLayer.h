@@ -39,4 +39,5 @@
 
 +(id) layerWithRows:(NSInteger)numRows andColumns:(NSInteger)numCols;
 
+- (void)updateLivesDisplay;
 @end
